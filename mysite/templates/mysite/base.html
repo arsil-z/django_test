@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" defer>
+    function getToken(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    let csrftoken = getToken('csrftoken');
+
+
+
+  </script>
+</head>
+
+<body>
+
+  <div class="container mt-4 pt-4">
+    <div class="row mt-4 pt-4">
+      <h2>Enter Your Personal Details</h2>
+    </div>
+    <form class="mt-4 pt-4">
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="roll_number">Roll Number</label>
+          <input type="number" class="form-control" id="roll_number">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="fname">First Name</label>
+          <input type="text" class="form-control" id="fname">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="lname">Last Name</label>
+          <input type="text" class="form-control" id="lname">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="email">Email Id</label>
+          <input type="email" class="form-control" id="email">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="dob">Date of Birth</label>
+          <input type="date" class="form-control" id="dob">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-check">
+          <div class="row">
+            Hobbies: &emsp;
+            <div class="col-md-1">
+              <input class="form-check-input" type="checkbox" value="sports" name="hobbies">
+              <label class="form-check-label" for="sports">
+                Sports
+              </label>
+            </div>
+            <div class="col-md-1">
+              <input class="form-check-input" type="checkbox" value="reading" name="hobbies">
+              <label class="form-check-label" for="reading">
+                Reading
+              </label>
+            </div>
+            <div class="col-md-1">
+              <input class="form-check-input" type="checkbox" value="coding" name="hobbies">
+              <label class="form-check-label" for="coding">
+                Coding
+              </label>
+            </div>
+            <div class="col-md-1">
+              <input class="form-check-input" type="checkbox" value="learning" name="hobbies">
+              <label class="form-check-label" for="learning">
+                Learning
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    {% if pd %}
+    <div class="row pt-4 mt-4">
+      <div class="col-md-10">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Roll Number</th>
+              <th scope="col" class="sort">First Name <i class="fa fa-arrow-up"></i><i class="fa fa-arrow-down"></i>
+              </th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Date Of Birth</th>
+              <th scope="col">Hobbies</th>
+            </tr>
+          </thead>
+          <tbody id="output">
+            <tr></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript">
+
+    const submitBtn = document.getElementById('submit');
+
+    submitBtn.addEventListener('click', formSubmitHandler);
+
+    function formSubmitHandler(e) {
+      e.preventDefault();
+      const rollNumber = document.getElementById('roll_number').value;
+      const firstName = document.getElementById('fname').value;
+      const lastName = document.getElementById('lname').value;
+      const email = document.getElementById('email').value;
+      const dateOfBirth = document.getElementById('dob').value;
+      const hobbies = document.getElementsByClassName('form-check-input');
+      let selectedHobbies = [];
+
+      for (let i = 0; i < hobbies.length; i++) {
+        if (hobbies[i].checked) {
+          selectedHobbies.push(hobbies[i].value)
+        }
+      }
+
+
+
+      if (rollNumber.trim() === '') {
+        alert('Please enter a valid rollnumber');
+        return
+      }
+      if (firstName.trim() === '') {
+        alert('Please enter a valid First Name');
+        return
+      }
+      if (lastName.trim() === '') {
+        alert('Please enter a valid Last Name');
+        return
+      }
+      const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (email.trim() === '' || emailFormat.test(email) === false) {
+        alert('Please enter a valid Email Id');
+        return
+      }
+      const usersDob = new Date(dateOfBirth);
+      const todaysDate = new Date();
+      if (usersDob > todaysDate) {
+        alert("Please enter a valid date of birth, it cannot be greater than today's date");
+        return
+      }
+      if (selectedHobbies.length === 0) {
+        alert('Hobbies cannot be empty, please select some hobbies');
+        return
+      }
+
+      userData = {
+        'roll_no': rollNumber,
+        'first_name': firstName,
+        'last_name': lastName,
+        'email': email,
+        'date_of_birth': usersDob,
+        'hobbies': selectedHobbies
+      }
+
+
+      const url = '/process_details/';
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(userData)
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Success', data);
+          location.reload();
+        })
+
+
+
+    }
+    let finalDetails = {};
+    const data = JSON.parse('{{ finalData|escapejs }}');
+
+    let detail = {};
+    let listOfDetail = [];
+    for (let k in data) {
+      detail['roll_no'] = k;
+      detail['first_name'] = data[k]['first_name'];
+      detail['last_name'] = data[k]['last_name'];
+      detail['email'] = data[k]['email'];
+      detail['date_of_birth'] = data[k]['date_of_birth'];
+      detail['hobbies'] = data[k]['hobbies'];
+
+      listOfDetail.push(detail);
+
+      detail = {}
+
+    }
+    var toAppend = document.getElementById('output');
+    var output = '';
+
+    for (let i of listOfDetail) {
+      output += `<tr>
+            <th>${i['roll_no']}</th>
+            <td>${i['first_name']}</td>
+            <td>${i['last_name']}</td>
+            <td>${i['email']}</td>
+            <td>${i['date_of_birth']}</td>
+            <td>${i['hobbies']}</td>
+            </tr>
+          `;
+    }
+    let firstNameToSort = document.querySelector('.fa-arrow-up');
+    firstNameToSort.addEventListener('click', sortFirstName);
+    function sortFirstName() {
+      listOfDetail.sort(function (first_name1, first_name2) {
+        if (first_name1.first_name > first_name2.first_name) return -1
+        if (first_name1.first_name < first_name2.first_name) return 1
+      })
+      output = '';
+      for (let i of listOfDetail) {
+        output += `<tr>
+            <th>${i['roll_no']}</th>
+            <td>${i['first_name']}</td>
+            <td>${i['last_name']}</td>
+            <td>${i['email']}</td>
+            <td>${i['date_of_birth']}</td>
+            <td>${i['hobbies']}</td>
+            </tr>
+          `;
+        toAppend.innerHTML = output;
+      }
+    }
+
+    let NameToSort = document.querySelector('.fa-arrow-down');
+    NameToSort.addEventListener('click', unsortFirstName);
+    function unsortFirstName() {
+      listOfDetail.sort(function (first_name1, first_name2) {
+        if (first_name1.first_name > first_name2.first_name) return 1
+        if (first_name1.first_name < first_name2.first_name) return -1
+      })
+      output = '';
+      for (let i of listOfDetail) {
+        output += `<tr>
+            <th>${i['roll_no']}</th>
+            <td>${i['first_name']}</td>
+            <td>${i['last_name']}</td>
+            <td>${i['email']}</td>
+            <td>${i['date_of_birth']}</td>
+            <td>${i['hobbies']}</td>
+            </tr>
+          `;
+        toAppend.innerHTML = output;
+      }
+    }
+
+    toAppend.innerHTML = output;
+
+
+  </script>
+</body>
+
+</html>
