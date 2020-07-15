@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'j)h#4_0spx0f90oxkfublr5ecj+wp0vltpt5-a2a_x%2hsh#)3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['arsil-django.herokuapp.com', 'localhost']
 
 
 # Application definition
